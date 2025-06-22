@@ -1,0 +1,51 @@
+name: Build
+
+
+env:
+  GOVERSION: "1.23.2"
+  NAME: "odoo-bkp"
+  FULLNAME: "Odoo Backup"
+  VERSION: "0.1.0"
+  INPUT_TAG: "v0.1.0"
+
+on:
+  push:
+    # We want to run the workflow on all branches.
+    # But you can restrict the runs if necessary.
+    branches:
+      - "*"
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        go-version: [ '1.21.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        run: |
+          go get .
+      - name: Build
+        run: go build .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: odoo-bkp
+          path: |
+            odoo-bkp
+
+            
+      
+
+
+
+
